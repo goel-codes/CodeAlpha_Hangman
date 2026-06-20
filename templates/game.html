@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeAlpha Hangman Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='hangman.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎮 Hangman Game</h1>
+            <p>Guess the word, one letter at a time!</p>
+        </header>
+
+        <!-- Game Container -->
+        <div class="game-wrapper">
+            <!-- Hangman Drawing Area -->
+            <div class="hangman-section">
+                <div class="hangman-drawing">
+                    <svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Gallows -->
+                        <line x1="10" y1="230" x2="150" y2="230" stroke="#2c3e50" stroke-width="4"/>
+                        <line x1="50" y1="230" x2="50" y2="20" stroke="#2c3e50" stroke-width="4"/>
+                        <line x1="50" y1="20" x2="130" y2="20" stroke="#2c3e50" stroke-width="4"/>
+                        <line x1="130" y1="20" x2="130" y2="50" stroke="#2c3e50" stroke-width="4"/>
+                        
+                        <!-- Head -->
+                        <circle id="head" cx="130" cy="70" r="20" stroke="#e74c3c" stroke-width="2" fill="none" style="display:none"/>
+                        
+                        <!-- Body -->
+                        <line id="body" x1="130" y1="90" x2="130" y2="150" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                        
+                        <!-- Left Arm -->
+                        <line id="left-arm" x1="130" y1="110" x2="100" y2="130" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                        
+                        <!-- Right Arm -->
+                        <line id="right-arm" x1="130" y1="110" x2="160" y2="130" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                        
+                        <!-- Left Leg -->
+                        <line id="left-leg" x1="130" y1="150" x2="110" y2="180" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                        
+                        <!-- Right Leg -->
+                        <line id="right-leg" x1="130" y1="150" x2="150" y2="180" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                    </svg>
+                </div>
+                <div class="wrong-count">
+                    <p>Wrong Guesses: <span id="wrong-count">0</span>/6</p>
+                </div>
+            </div>
+
+            <!-- Game Section -->
+            <div class="game-section">
+                <!-- Word Display -->
+                <div class="word-display">
+                    <div id="word" class="word">_ _ _ _ _ _</div>
+                    <p id="word-hint" class="word-hint">Word length: <span id="word-length">6</span> letters</p>
+                </div>
+
+                <!-- Guessed Letters -->
+                <div class="guessed-section">
+                    <h3>Guessed Letters:</h3>
+                    <div id="guessed-letters" class="guessed-letters">
+                        <span class="placeholder">None yet</span>
+                    </div>
+                </div>
+
+                <!-- Keyboard -->
+                <div class="keyboard">
+                    <div id="letter-buttons" class="letter-buttons">
+                        <!-- Generated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div id="message-box" class="message-box hidden">
+                    <p id="message"></p>
+                </div>
+
+                <!-- Game Status -->
+                <div id="game-status" class="game-status hidden">
+                    <h2 id="status-title"></h2>
+                    <p id="status-word"></p>
+                </div>
+
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button id="new-game-btn" class="btn btn-primary">New Game</button>
+                    <button id="reset-btn" class="btn btn-secondary">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='hangman.js') }}"></script>
+</body>
+</html>
