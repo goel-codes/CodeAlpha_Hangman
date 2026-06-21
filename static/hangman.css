@@ -14,6 +14,8 @@
     --white: #ffffff;
     --text-dark: #2c3e50;
     --text-light: #7f8c8d;
+    --hint-bg: #fef9e7;
+    --hint-border: #f39c12;
 }
 
 body {
@@ -24,6 +26,90 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+}
+
+/* Modal Styles */
+.modal {
+    display: flex;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background-color: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+.rules-content {
+    margin: 20px 0;
+}
+
+.rules-content h3 {
+    color: var(--secondary-color);
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.rules-content ul {
+    list-style-position: inside;
+    margin-left: 10px;
+}
+
+.rules-content li {
+    margin: 8px 0;
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.rules-content strong {
+    color: var(--primary-color);
+    font-weight: 600;
 }
 
 .container {
@@ -96,6 +182,21 @@ body {
     gap: 20px;
 }
 
+/* Difficulty Badge */
+.difficulty-badge {
+    text-align: center;
+    padding: 8px 15px;
+    background: linear-gradient(135deg, #e8f4f8 0%, #f0e8f8 100%);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.difficulty-badge strong {
+    color: var(--primary-color);
+}
+
 /* Word Display */
 .word-display {
     text-align: center;
@@ -118,6 +219,100 @@ body {
 .word-hint {
     font-size: 13px;
     color: var(--text-light);
+}
+
+/* Hints Display Section */
+.hints-display-section {
+    padding: 15px;
+    background: var(--hint-bg);
+    border-left: 4px solid var(--hint-border);
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.hints-display-section h3 {
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.btn-hint {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--warning-color) 0%, #e67e22 100%);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+    margin-bottom: 10px;
+}
+
+.btn-hint:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+}
+
+.btn-hint:disabled {
+    background: var(--text-light);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Hints Given (Display Previous Hints) */
+.hints-given {
+    margin: 10px 0;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.hint-box {
+    padding: 10px;
+    background: var(--white);
+    border-left: 3px solid var(--hint-border);
+    margin: 8px 0;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text-dark);
+    line-height: 1.5;
+    animation: slideInHint 0.3s ease-out;
+}
+
+@keyframes slideInHint {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.hint-message {
+    font-size: 13px;
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.hint-message.hidden {
+    display: none;
+}
+
+.hint-message.success {
+    color: var(--success-color);
+    background: #d4edda;
+    border-left: 3px solid var(--success-color);
+}
+
+.hint-message.error {
+    color: var(--primary-color);
+    background: #f8d7da;
+    border-left: 3px solid var(--primary-color);
 }
 
 /* Guessed Letters */
@@ -252,6 +447,15 @@ body {
     font-size: 16px;
     font-weight: 600;
     color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.status-hints {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Buttons */
@@ -323,6 +527,10 @@ body {
     .button-group {
         flex-direction: column;
     }
+
+    .modal-content {
+        padding: 25px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -346,5 +554,14 @@ body {
     .hangman-drawing {
         width: 150px;
         height: 200px;
+    }
+
+    .modal-content {
+        max-height: 90vh;
+        padding: 20px;
+    }
+
+    .hints-given {
+        max-height: 120px;
     }
 }

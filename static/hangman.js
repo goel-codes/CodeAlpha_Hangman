@@ -1,5 +1,6 @@
 /**
- * Hangman Game - Frontend Logic
+ * Hangman Game - Final JavaScript
+ * Works with final Flask API
  */
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -12,10 +13,15 @@ let gameState = {
     wrongCount: 0,
     remaining: 6,
     gameOver: false,
-    won: false
+    won: false,
+    hintsUsed: 0,
+    hintsRemaining: 2,
+    maxHints: 2,
+    difficulty: 'easy'
 };
 
 // DOM Elements
+const rulesModal = document.getElementById('rulesModal');
 const wordDisplay = document.getElementById('word');
 const wordLength = document.getElementById('word-length');
 const letterButtons = document.getElementById('letter-buttons');
@@ -26,18 +32,36 @@ const messageText = document.getElementById('message');
 const gameStatus = document.getElementById('game-status');
 const statusTitle = document.getElementById('status-title');
 const statusWord = document.getElementById('status-word');
+const statusHints = document.getElementById('status-hints');
 const newGameBtn = document.getElementById('new-game-btn');
 const resetBtn = document.getElementById('reset-btn');
+const hintBtn = document.getElementById('hint-btn');
+const hintMessage = document.getElementById('hint-message');
+const hintsRemaining = document.getElementById('hints-remaining');
+const maxHints = document.getElementById('max-hints');
+const hintsGivenDiv = document.getElementById('hints-given');
+const difficultyText = document.getElementById('difficulty-text');
 
-// Initialize Game
+// Initialize
 window.addEventListener('load', () => {
     createKeyboard();
-    startNewGame();
+    showRulesModal();
 });
 
 // Event Listeners
 newGameBtn.addEventListener('click', startNewGame);
 resetBtn.addEventListener('click', () => location.reload());
+
+// Show Rules Modal
+function showRulesModal() {
+    rulesModal.style.display = 'flex';
+}
+
+// Start Game
+function startGame() {
+    rulesModal.style.display = 'none';
+    startNewGame();
+}
 
 // Create Keyboard
 function createKeyboard() {
@@ -64,13 +88,22 @@ async function startNewGame() {
         
         if (data.status === 'success') {
             gameState = data.state;
+            
+            // Update difficulty display
+            const diffClass = gameState.difficulty === 'easy' ? 'Easy' : 'Hard';
+            difficultyText.textContent = `Difficulty: ${diffClass} (${gameState.max_hints} hint${gameState.max_hints > 1 ? 's' : ''})`;
+            
             updateDisplay();
             resetKeyboard();
             clearMessages();
             gameStatus.classList.add('hidden');
+            hintBtn.disabled = false;
+            hintsGivenDiv.innerHTML = '';
+            updateHintButton();
         }
     } catch (error) {
         showMessage('Error starting new game!', 'error');
+        console.error(error);
     }
 }
 
@@ -88,26 +121,103 @@ async function guessLetter(letter, btn) {
         });
 
         const data = await response.json();
-        gameState = data.state;
+        
+        if (data.status === 'success') {
+            gameState = data.state;
 
-        // Update button appearance
-        if (data.state.wrong_guesses.includes(letter)) {
-            btn.classList.add('wrong');
-        } else if (data.state.guessed_letters.includes(letter)) {
-            btn.classList.add('correct');
-        }
+            // Update button appearance
+            if (data.state.wrong_guesses.includes(letter)) {
+                btn.classList.add('wrong');
+            } else if (data.state.guessed_letters.includes(letter)) {
+                btn.classList.add('correct');
+            }
 
-        updateDisplay();
-        showMessage(data.message);
+            updateDisplay();
+            showMessage(data.message);
 
-        // Check if game is over
-        if (gameState.gameOver) {
-            disableAllButtons();
-            showGameStatus(gameState.won);
+            // Check if game is over
+            if (gameState.gameOver) {
+                disableAllButtons();
+                showGameStatus(gameState.won);
+            }
+        } else {
+            showMessage(data.message, 'error');
+            btn.disabled = false;
         }
     } catch (error) {
         showMessage('Error making guess!', 'error');
         btn.disabled = false;
+        console.error(error);
+    }
+}
+
+// Request Hint
+async function requestHint() {
+    if (gameState.gameOver) {
+        showHintMessage('Game is over! Start a new game.', 'error');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/hint', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            gameState = data.state;
+
+            // Display the hint
+            displayHintBox(data.hint_text);
+            updateDisplay();
+            showHintMessage(data.message, 'success');
+            updateHintButton();
+        } else {
+            showHintMessage(data.message, 'error');
+        }
+    } catch (error) {
+        showHintMessage('Error: ' + error.message, 'error');
+        console.error(error);
+    }
+}
+
+// Display Hint Box
+function displayHintBox(hintText) {
+    const hintBox = document.createElement('div');
+    hintBox.className = 'hint-box';
+    hintBox.innerHTML = `<strong>Hint ${gameState.hints_used}:</strong> ${hintText}`;
+    hintsGivenDiv.appendChild(hintBox);
+    
+    // Auto scroll
+    hintsGivenDiv.scrollTop = hintsGivenDiv.scrollHeight;
+}
+
+// Show Hint Message
+function showHintMessage(message, type = 'info') {
+    hintMessage.textContent = message;
+    hintMessage.className = 'hint-message ' + type;
+    
+    setTimeout(() => {
+        hintMessage.classList.add('hidden');
+    }, 4000);
+}
+
+// Update Hint Button
+function updateHintButton() {
+    const remaining = gameState.hints_remaining || 0;
+    const max = gameState.max_hints || 2;
+    
+    hintsRemaining.textContent = remaining;
+    maxHints.textContent = max;
+    
+    if (remaining <= 0) {
+        hintBtn.disabled = true;
+        hintBtn.textContent = '💡 No More Hints';
+    } else {
+        hintBtn.disabled = false;
+        hintBtn.textContent = `💡 Get a Clue (${remaining}/${max})`;
     }
 }
 
@@ -126,10 +236,13 @@ function updateDisplay() {
         guessedLettersDisplay.innerHTML = '<span class="placeholder">None yet</span>';
     }
 
-    // Wrong Count & Hangman Drawing
+    // Wrong Count & Hangman
     const wrongCount = gameState.wrong_guesses ? gameState.wrong_guesses.length : 0;
     wrongCountDisplay.textContent = wrongCount;
     updateHangman(wrongCount);
+
+    // Hints
+    updateHintButton();
 }
 
 // Update Hangman Drawing
@@ -159,6 +272,7 @@ function showMessage(message, type = 'info') {
 function clearMessages() {
     messageBox.classList.add('hidden');
     messageText.textContent = '';
+    hintMessage.classList.add('hidden');
 }
 
 // Show Game Status
@@ -170,10 +284,17 @@ function showGameStatus(won) {
         gameStatus.classList.add('won');
         statusTitle.textContent = '🎉 YOU WON!';
         statusTitle.style.color = '#27ae60';
+        statusWord.textContent = 'Congratulations! You guessed the word!';
     } else {
         gameStatus.classList.add('lost');
         statusTitle.textContent = '💀 GAME OVER!';
         statusTitle.style.color = '#e74c3c';
+        statusWord.textContent = 'Better luck next time!';
+    }
+    
+    // Show hints used
+    if (gameState.hints_used > 0) {
+        statusHints.innerHTML = `<strong>Hints used:</strong> ${gameState.hints_used}/${gameState.max_hints}`;
     }
 }
 
@@ -182,6 +303,7 @@ function disableAllButtons() {
     document.querySelectorAll('.letter-btn').forEach(btn => {
         btn.disabled = true;
     });
+    hintBtn.disabled = true;
 }
 
 // Reset Keyboard
@@ -189,37 +311,5 @@ function resetKeyboard() {
     document.querySelectorAll('.letter-btn').forEach(btn => {
         btn.disabled = false;
         btn.classList.remove('correct', 'wrong');
-    });
-}
-
-// Load Game Status on Page Load
-async function loadGameStatus() {
-    try {
-        const response = await fetch('/api/status');
-        const data = await response.json();
-        
-        if (data.status === 'active') {
-            gameState = data.state;
-            updateDisplay();
-            disableAlreadyGuessed();
-        }
-    } catch (error) {
-        console.log('No active game');
-    }
-}
-
-// Disable Already Guessed Letters
-function disableAlreadyGuessed() {
-    const allGuessed = [...(gameState.guessed_letters || []), ...(gameState.wrong_guesses || [])];
-    allGuessed.forEach(letter => {
-        const btn = document.getElementById(`btn-${letter}`);
-        if (btn) {
-            btn.disabled = true;
-            if (gameState.guessed_letters.includes(letter)) {
-                btn.classList.add('correct');
-            } else {
-                btn.classList.add('wrong');
-            }
-        }
     });
 }
