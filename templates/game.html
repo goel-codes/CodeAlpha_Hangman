@@ -3,148 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeAlpha Hangman Game - Enhanced</title>
+    <title>Hangman Game - CodeAlpha</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='hangman.css') }}">
 </head>
 <body>
-    <!-- Rules Modal -->
-    <div id="rulesModal" class="modal">
-        <div class="modal-content">
-            <h2>🎮 Welcome to Hangman!</h2>
-            <div class="rules-content">
-                <h3>📋 How to Play:</h3>
-                <ul>
-                    <li>Guess the hidden word one letter at a time</li>
-                    <li>You have <strong>6 wrong guesses</strong> allowed</li>
-                    <li>Correct guesses reveal letters in the word</li>
-                    <li>Wrong guesses build the hangman drawing</li>
-                    <li>Win by guessing all letters before running out of guesses</li>
-                </ul>
 
-                <h3>💡 Smart Hints:</h3>
-                <ul>
-                    <li>Get helpful <strong>riddle-based clues</strong> to guess the word</li>
-                    <li><strong>Easy words:</strong> 1 hint per game</li>
-                    <li><strong>Hard words:</strong> 2 hints per game</li>
-                    <li>Use hints wisely - they help you think strategically</li>
-                </ul>
-
-                <h3>🎯 Tips:</h3>
-                <ul>
-                    <li>Start with common vowels (A, E, I, O, U)</li>
-                    <li>Read hints carefully - they contain useful clues</li>
-                    <li>Think about word patterns and context</li>
-                </ul>
-            </div>
-
-            <button class="btn btn-primary" onclick="startGame()">🎮 Start Game</button>
+<!-- RULES MODAL -->
+<div id="rulesModal" class="modal" style="display: flex;">
+    <div class="modal-content">
+        <h2>🎮 Welcome to Hangman!</h2>
+        <div class="rules-content">
+            <h3>📋 How to Play:</h3>
+            <ul>
+                <li>Guess the hidden word one letter at a time</li>
+                <li>You have <strong>6 wrong guesses</strong> allowed</li>
+                <li>Correct guesses reveal letters in the word</li>
+                <li>Wrong guesses build the hangman drawing</li>
+            </ul>
+            <h3>💡 Smart Hints:</h3>
+            <ul>
+                <li>Get helpful <strong>riddle-based clues</strong> to guess the word</li>
+                <li><strong>Easy words:</strong> 1 hint per game</li>
+                <li><strong>Hard words:</strong> 2 hints per game</li>
+            </ul>
         </div>
+        <button class="btn btn-primary" onclick="startGame()">🎮 Start Game</button>
     </div>
+</div>
 
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1>🎮 Hangman Game</h1>
-            <p>Guess the word, one letter at a time! 💡</p>
-        </header>
+<!-- WIN CELEBRATION MODAL -->
+<div id="celebrationModal" class="modal celebration-modal" style = "display: none;">
+    <div class="celebration-content">
+        <div class="confetti-container">
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+        </div>
 
-        <!-- Game Container -->
-        <div class="game-wrapper">
-            <!-- Hangman Section -->
-            <div class="hangman-section">
-                <div class="hangman-drawing">
-                    <svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Gallows -->
-                        <line x1="10" y1="230" x2="150" y2="230" stroke="#2c3e50" stroke-width="4"/>
-                        <line x1="50" y1="230" x2="50" y2="20" stroke="#2c3e50" stroke-width="4"/>
-                        <line x1="50" y1="20" x2="130" y2="20" stroke="#2c3e50" stroke-width="4"/>
-                        <line x1="130" y1="20" x2="130" y2="50" stroke="#2c3e50" stroke-width="4"/>
-                        
-                        <!-- Head -->
-                        <circle id="head" cx="130" cy="70" r="20" stroke="#e74c3c" stroke-width="2" fill="none" style="display:none"/>
-                        
-                        <!-- Body -->
-                        <line id="body" x1="130" y1="90" x2="130" y2="150" stroke="#e74c3c" stroke-width="2" style="display:none"/>
-                        
-                        <!-- Left Arm -->
-                        <line id="left-arm" x1="130" y1="110" x2="100" y2="130" stroke="#e74c3c" stroke-width="2" style="display:none"/>
-                        
-                        <!-- Right Arm -->
-                        <line id="right-arm" x1="130" y1="110" x2="160" y2="130" stroke="#e74c3c" stroke-width="2" style="display:none"/>
-                        
-                        <!-- Left Leg -->
-                        <line id="left-leg" x1="130" y1="150" x2="110" y2="180" stroke="#e74c3c" stroke-width="2" style="display:none"/>
-                        
-                        <!-- Right Leg -->
-                        <line id="right-leg" x1="130" y1="150" x2="150" y2="180" stroke="#e74c3c" stroke-width="2" style="display:none"/>
-                    </svg>
-                </div>
-                <div class="wrong-count">
-                    <p>Wrong Guesses: <span id="wrong-count">0</span>/6</p>
-                </div>
+        <h1 class="celebration-title">🎉 CONGRATULATIONS! 🎉</h1>
+        
+        <div class="celebration-message">
+            <p class="big-emoji">🏆</p>
+            <h2>YOU WON!</h2>
+            <p class="word-revealed" id="celebrationWord">The word was: <strong>HANGMAN</strong></p>
+        </div>
+
+        <div class="celebration-stats">
+            <div class="stat-box">
+                <span class="stat-label">Wrong Guesses:</span>
+                <span class="stat-value" id="celebWrongCount">2/6</span>
             </div>
-
-            <!-- Game Section -->
-            <div class="game-section">
-                <!-- Difficulty Badge -->
-                <div class="difficulty-badge">
-                    <span id="difficulty-text">Difficulty: <strong>Easy</strong></span>
-                </div>
-
-                <!-- Word Display -->
-                <div class="word-display">
-                    <div id="word" class="word">_ _ _ _ _ _</div>
-                    <p id="word-hint" class="word-hint">Word length: <span id="word-length">6</span> letters</p>
-                </div>
-
-                <!-- Hints Display -->
-                <div class="hints-display-section">
-                    <h3>💡 Available Hints:</h3>
-                    <button id="hint-btn" class="btn btn-hint" onclick="requestHint()">
-                        💡 Get a Clue (<span id="hints-remaining">2</span>/<span id="max-hints">2</span>)
-                    </button>
-                    <div id="hints-given" class="hints-given">
-                        <!-- Previous hints will appear here -->
-                    </div>
-                    <p id="hint-message" class="hint-message hidden"></p>
-                </div>
-
-                <!-- Guessed Letters -->
-                <div class="guessed-section">
-                    <h3>Guessed Letters:</h3>
-                    <div id="guessed-letters" class="guessed-letters">
-                        <span class="placeholder">None yet</span>
-                    </div>
-                </div>
-
-                <!-- Keyboard -->
-                <div class="keyboard">
-                    <div id="letter-buttons" class="letter-buttons">
-                        <!-- Generated dynamically -->
-                    </div>
-                </div>
-
-                <!-- Message -->
-                <div id="message-box" class="message-box hidden">
-                    <p id="message"></p>
-                </div>
-
-                <!-- Game Status -->
-                <div id="game-status" class="game-status hidden">
-                    <h2 id="status-title"></h2>
-                    <p id="status-word"></p>
-                    <div id="status-hints" class="status-hints"></div>
-                </div>
-
-                <!-- Buttons -->
-                <div class="button-group">
-                    <button id="new-game-btn" class="btn btn-primary">🎮 New Game</button>
-                    <button id="reset-btn" class="btn btn-secondary">🔄 Reset</button>
-                </div>
+            <div class="stat-box">
+                <span class="stat-label">Hints Used:</span>
+                <span class="stat-value" id="celebHintsUsed">1/2</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Difficulty:</span>
+                <span class="stat-value" id="celebDifficulty">Hard</span>
             </div>
         </div>
-    </div>
 
-    <script src="{{ url_for('static', filename='hangman.js') }}"></script>
+        <div class="celebration-messages">
+            <p id="celebMessage" class="main-message">Amazing! You're a word-guessing master! 🎯</p>
+            <p class="sub-message">Ready for another challenge?</p>
+        </div>
+
+        <button class="btn btn-celebrate" onclick="startNewGameFromCelebration()">🎮 Start New Game</button>
+    </div>
+</div>
+
+<!-- LOSS GAME OVER MODAL -->
+<div id="gameOverModal" class="modal gameover-modal hidden" style="display: none;">
+    <div class="gameover-content">
+        <div class="sad-animation">
+            <p class="sad-emoji">😢</p>
+        </div>
+
+        <h1 class="gameover-title">💀 GAME OVER! 💀</h1>
+        
+        <div class="gameover-message">
+            <h2>OOPS!</h2>
+            <p class="word-revealed" id="gameOverWord">The word was: <strong>HANGMAN</strong></p>
+        </div>
+
+        <div class="gameover-stats">
+            <div class="stat-box">
+                <span class="stat-label">Wrong Guesses:</span>
+                <span class="stat-value" id="gameOverWrongCount">6/6</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Hints Used:</span>
+                <span class="stat-value" id="gameOverHintsUsed">1/2</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Difficulty:</span>
+                <span class="stat-value" id="gameOverDifficulty">Hard</span>
+            </div>
+        </div>
+
+        <div class="gameover-messages">
+            <p id="gameOverMessage" class="main-message">Don't worry, you'll get it next time! 💪</p>
+            <p class="sub-message">Learn from this and try again!</p>
+        </div>
+
+        <button class="btn btn-gameover" onclick="startNewGameFromGameOver()">🎮 Try Again</button>
+    </div>
+</div>
+
+<!-- MAIN GAME CONTAINER -->
+<div class="container">
+    <header class="header">
+        <h1>🎮 Hangman Game</h1>
+        <p>Guess the word, one letter at a time! 💡</p>
+    </header>
+
+    <div class="game-wrapper">
+        <!-- HANGMAN DRAWING -->
+        <div class="hangman-section">
+            <div class="hangman-drawing">
+                <svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="10" y1="230" x2="150" y2="230" stroke="#2c3e50" stroke-width="4"/>
+                    <line x1="50" y1="230" x2="50" y2="20" stroke="#2c3e50" stroke-width="4"/>
+                    <line x1="50" y1="20" x2="130" y2="20" stroke="#2c3e50" stroke-width="4"/>
+                    <line x1="130" y1="20" x2="130" y2="50" stroke="#2c3e50" stroke-width="4"/>
+                    
+                    <circle id="head" cx="130" cy="70" r="20" stroke="#e74c3c" stroke-width="2" fill="none" style="display:none"/>
+                    <line id="body" x1="130" y1="90" x2="130" y2="150" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                    <line id="left-arm" x1="130" y1="110" x2="100" y2="130" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                    <line id="right-arm" x1="130" y1="110" x2="160" y2="130" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                    <line id="left-leg" x1="130" y1="150" x2="110" y2="180" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                    <line id="right-leg" x1="130" y1="150" x2="150" y2="180" stroke="#e74c3c" stroke-width="2" style="display:none"/>
+                </svg>
+            </div>
+            <div class="wrong-count">
+                <p>Wrong Guesses: <span id="wrong-count">0</span>/6</p>
+            </div>
+        </div>
+
+        <!-- GAME SECTION -->
+        <div class="game-section">
+            <div class="difficulty-badge">
+                <span id="difficulty-text">Difficulty: <strong>Easy</strong></span>
+            </div>
+
+            <div class="word-display">
+                <div id="word" class="word">_ _ _ _ _ _</div>
+                <p class="word-hint">Word length: <span id="word-length">6</span> letters</p>
+            </div>
+
+            <div class="hints-display-section">
+                <h3>💡 Available Hints:</h3>
+                <button id="hint-btn" class="btn btn-hint" onclick="requestHint()">
+                    💡 Get a Clue (<span id="hints-remaining">2</span>/<span id="max-hints">2</span>)
+                </button>
+                <div id="hints-given" class="hints-given"></div>
+                <p id="hint-message" class="hint-message hidden"></p>
+            </div>
+
+            <div class="guessed-section">
+                <h3>Guessed Letters:</h3>
+                <div id="guessed-letters" class="guessed-letters">
+                    <span class="placeholder">None yet</span>
+                </div>
+            </div>
+
+            <div class="keyboard">
+                <div id="letter-buttons" class="letter-buttons"></div>
+            </div>
+
+            <div id="message-box" class="message-box hidden">
+                <p id="message"></p>
+            </div>
+
+            <div class="button-group">
+                <button id="new-game-btn" class="btn btn-primary">🎮 New Game</button>
+                <button id="reset-btn" class="btn btn-secondary">🔄 Reset</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='hangman.js') }}"></script>
+
 </body>
 </html>

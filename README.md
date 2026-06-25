@@ -1,148 +1,376 @@
-# 🎮 Hangman Game
+# 🎮 Hangman Game - Web Version
 
-## Project Goal
-Create a simple text-based Hangman game where players guess letters one at a time to find a hidden word.
+**CodeAlpha Python Internship Project** | Built with Flask + HTML/CSS/JavaScript
 
-## Description
-This is a classic Hangman game implementation in Python. Players have 6 incorrect guesses to figure out the word. The game uses a list of 5 predefined words and provides real-time feedback on guesses.
+---
 
-## Features
-- 5 predefined words (no external APIs needed)
-- 6 incorrect guesses allowed
-- Real-time feedback on each guess
-- Shows current word progress
-- Tracks guessed letters
-- Play again option
-- Console-based interface with emoji feedback
+## 📌 Project Overview
 
-## Installation
+A modern, interactive **Hangman Game** web application with:
+- 🎯 Smart riddle-based hint system
+- 🎨 Beautiful responsive UI with animations
+- 🏆 Win/Loss celebration pages
+- 📱 Mobile-friendly design
+- ⚡ Real-time game feedback
 
-1. Clone the repository:
+---
+
+## ✨ Features
+
+### 🎮 Game Features
+- **10 Word Categories**: Easy & Hard difficulty levels
+- **Smart Hints**: Riddle-based clues (1-2 hints per word)
+- **Visual Hangman**: SVG drawing updates with each wrong guess
+- **Real-time Feedback**: Instant response to every guess
+- **Game Statistics**: Track wrong guesses, hints used, difficulty
+
+### 🎭 UI/UX Features
+- **Rules Modal**: Explain game before playing
+- **Win Celebration Page**: 🎉 Confetti animations + trophy
+- **Loss Game Over Page**: 💀 Sad emoji + encouragement
+- **Responsive Design**: Works on desktop, tablet, mobile
+- **Smooth Animations**: CSS transitions for professional feel
+
+---
+
+## 🚀 Installation & Setup
+
+### Prerequisites
 ```bash
-git clone https://github.com/goel-codes/CodeAlpha_Hangman.git
+Python 3.6+
+pip package manager
 ```
 
-2. Navigate to the project folder:
+### Step 1: Clone Repository
 ```bash
+git clone https://github.com/goel-codes/CodeAlpha_Hangman.git
 cd CodeAlpha_Hangman
 ```
 
-3. Ensure Python 3.6+ is installed:
+### Step 2: Install Dependencies
 ```bash
-python --version
+pip install -r requirements.txt
 ```
 
-## How to Run
-
+### Step 3: Run Server
 ```bash
-python hangman_game.py
+python hangman_flask.py
 ```
 
-## How to Play
-
-1. The game picks a random word and displays blanks for each letter
-2. You have 6 incorrect guesses allowed
-3. Guess one letter at a time
-4. If the letter is in the word, it's revealed in all positions
-5. If the letter is not in the word, you lose one guess
-6. Win by guessing all letters before running out of guesses
-7. Play again or exit after each game
-
-## Sample Gameplay
-
+**Output:**
 ```
-============================================================
-🎮 WELCOME TO HANGMAN 🎮
-============================================================
-
-Word to guess: _ _ _ _ _ _
-Word length: 6 letters
-You have 6 incorrect guesses allowed.
-
-Guessed letters: None
-Wrong guesses remaining: 6
-Current word: _ _ _ _ _ _
-
-Guess a letter: e
-✅ Correct! 'e' is in the word.
-
-Guessed letters: E
-Wrong guesses remaining: 6
-Current word: _ _ _ _ _ E
-
-Guess a letter: a
-❌ Wrong! 'a' is not in the word.
-
-...
-
-🎉 CONGRATULATIONS! YOU WON! 🎉
-The word was: PYTHON
+ * Running on http://127.0.0.1:5001
+ * Debug mode: on
 ```
 
-## Key Concepts Used
+### Step 4: Open in Browser
+```
+http://localhost:5001
+```
 
-### 1. `random` Module
-- `random.choice()` selects a random word from the list
-- Used to make the game unpredictable
+---
 
-### 2. `while` Loops
-- Outer loop: continues game while player has guesses left and word isn't complete
-- Inner loop: continuously takes player input until valid guess
-- Implements game logic flow
+## 🎯 How to Play
 
-### 3. `if-else` Conditionals
-- Checks if guess is correct or incorrect
-- Validates user input (single letter, not already guessed)
-- Determines win/loss conditions
-- Provides appropriate feedback
+1. **Start Game**: Click "🎮 Start Game" button
+2. **Guess Letters**: Click letter buttons one at a time
+3. **Correct Guess**: ✅ Letter reveals in the word
+4. **Wrong Guess**: ❌ Hangman drawing updates
+5. **Get Hints**: 💡 Click "Get a Clue" for riddle-based hints
+6. **Win**: 🎉 Guess all letters → Celebration page with stats
+7. **Lose**: 💀 6 wrong guesses → Game Over page with word reveal
 
-### 4. String Methods
-- `.upper()` converts input to uppercase for consistency
-- `.strip()` removes whitespace
-- `.isalpha()` checks if input is alphabetic
-- String comparison for word matching
+---
 
-### 5. Lists and Sets
-- Lists: store word letters, track guessed word state
-- Sets: efficiently track guessed letters and wrong guesses
-- Used for fast lookup and duplicate prevention
-
-### 6. Input/Output Operations
-- `input()` gets player guesses
-- `print()` displays game status and feedback
-- Formatted output with emoji for better UX
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 CodeAlpha_Hangman/
-├── hangman_game.py          (Main game code)
-├── README.md                (This file)
-├── requirements.txt         (Dependencies)
-├── .gitignore              (Git exclusions)
-└── CONCEPTS_USED.md        (Educational guide)
+│
+├── 📄 hangman_flask.py          # Main Flask server (Backend)
+├── 📄 hangman_game.py           # Console version (Reference)
+├── 📄 requirements.txt          # Python dependencies
+├── 📄 README.md                 # This file
+├── 📄 CONCEPTS_USED.md          # Educational concepts
+│
+├── 📁 templates/
+│   └── 📄 game.html             # Main game UI (Frontend)
+│
+├── 📁 static/
+│   ├── 📄 hangman.css           # Styling & animations
+│   └── 📄 hangman.js            # Game logic & interactions
+│
+└── 📄 .gitignore                # Git exclusions
 ```
 
-## Requirements
-- Python 3.6 or higher
-- No external dependencies required
+---
 
-## Author
-CodeAlpha Intern - Vidushi Goel
+## 💻 Technologies Used
 
-## Contact
-- LinkedIn: https://www.linkedin.com/in/vidushi-goel/
-- GitHub: https://github.com/goel-codes
+### Backend
+- **Flask 3.0.0**: Lightweight Python web framework
+- **Jinja2**: Template rendering
+- **JSON**: API response format
 
-## Submission Notes
-- Repository name: `CodeAlpha_Hangman`
-- Uses basic Python concepts: random, while loops, if-else, strings, lists, sets
-- Console-based interface with no graphics or audio
-- Perfect for CodeAlpha internship requirements
+### Frontend
+- **HTML5**: Semantic structure
+- **CSS3**: Gradients, flexbox, animations
+- **JavaScript (Vanilla)**: DOM manipulation, fetch API
+- **SVG**: Scalable hangman drawing
 
-## Future Enhancements
-- Add difficulty levels (easy/medium/hard word lists)
-- Add word categories (animals, countries, movies)
-- Add hangman ASCII art visualization
-- Add scoring system
-- Add timer for timed challenges
+### Game Logic
+- **Python**: Game state management
+- **Flask Sessions**: Persistent game state
+- **RESTful API**: Clean endpoint design
+
+---
+
+## 🔌 API Endpoints
+
+### `POST /api/new-game`
+**Start a new game**
+- **Response**: New game state with empty board
+- **Example**:
+```json
+{
+  "status": "success",
+  "state": {
+    "display_word": "_ _ _ _ _ _",
+    "word_length": 6,
+    "remaining": 6,
+    "difficulty": "hard",
+    "max_hints": 2
+  }
+}
+```
+
+### `POST /api/guess`
+**Make a letter guess**
+- **Request**: `{"letter": "E"}`
+- **Response**: Updated game state + feedback message
+- **Example**:
+```json
+{
+  "status": "success",
+  "message": "✅ Correct! E is in the word!",
+  "state": { ... }
+}
+```
+
+### `POST /api/hint`
+**Get a hint**
+- **Request**: (none)
+- **Response**: Riddle-based clue + remaining hints
+- **Example**:
+```json
+{
+  "status": "success",
+  "message": "💡 Hint: I'm a snake that slithers through code!",
+  "hints_remaining": 1
+}
+```
+
+### `GET /api/status`
+**Get current game status**
+- **Response**: Current game state
+- **Example**:
+```json
+{
+  "status": "active",
+  "state": { ... }
+}
+```
+
+---
+
+## 🎯 Game Words & Hints
+
+### Hard Words (2 hints each)
+- **python**: Snake in code / British comedy group
+- **hangman**: Word-guessing game / Long car rides
+- **developer**: Create software / Code for living
+- **algorithm**: Step-by-step procedure / Make code efficient
+- **javascript**: Interactive websites / Language of browsers
+- **database**: Store organized information / Digital filing cabinet
+- **programming**: Write instructions for computers / No software without it
+
+### Easy Words (1 hint each)
+- **computer**: Electronic machine with screen
+- **internet**: Connect computers worldwide
+- **software**: Programs and apps you use
+
+---
+
+## 🛠️ Technical Implementation
+
+### Session Management
+```python
+session['game'] = {
+    'word': 'PYTHON',
+    'guessed_letters': ['P', 'Y'],
+    'wrong_guesses': ['A', 'E'],
+    'hints_used': 1,
+    'max_hints': 2,
+    'game_over': False,
+    'won': False
+}
+```
+
+### Game State Flow
+```
+1. New Game → Initialize empty board
+2. Player Guess → Validate → Update state
+3. Check Win/Loss → Continue or End
+4. Get Hint → Serve riddle → Track usage
+5. Game Over → Show celebration/loss page
+```
+
+### Win Condition
+- All letters in word are guessed ✅
+- Display celebration page 🎉
+- Show statistics & trophy 🏆
+
+### Loss Condition
+- 6 wrong guesses reached ❌
+- Display game over page 💀
+- Reveal the word 📝
+
+---
+
+## 🎨 UI Components
+
+### Modals
+1. **Rules Modal** (Shows on load)
+   - Game instructions
+   - Hint explanation
+   - "Start Game" button
+
+2. **Celebration Modal** (Shows on win)
+   - Trophy emoji 🏆
+   - Word reveal
+   - Statistics (wrong guesses, hints used)
+   - Difficulty level
+   - Motivational message
+   - "New Game" button
+
+3. **Game Over Modal** (Shows on loss)
+   - Sad emoji 😢
+   - Word reveal
+   - Statistics
+   - Encouragement message
+   - "Try Again" button
+
+### Interactive Elements
+- **Keyboard Buttons**: 26 letter buttons with state tracking
+- **Hint Button**: Shows remaining hints, disabled when out
+- **Hangman SVG**: Animated drawing (6 parts)
+- **Word Display**: Reveals letters progressively
+- **Guessed Letters**: Shows all guesses made so far
+
+---
+
+## 🔧 Troubleshooting
+
+### Issue: Game doesn't start
+**Solution**: Refresh browser (Ctrl+Shift+R) to clear cache
+
+### Issue: Hints throwing errors
+**Solution**: Ensure Flask server is running with fresh code
+
+### Issue: Celebration page doesn't show
+**Solution**: Open browser console (F12) to check for JavaScript errors
+
+### Issue: Game closes unexpectedly
+**Solution**: Check that `session.modified = True` is set after state changes
+
+---
+
+## 📊 Project Statistics
+
+- **Lines of Code**: ~500 (Flask) + ~400 (Frontend)
+- **Words Database**: 10 words with hints
+- **API Endpoints**: 4 RESTful endpoints
+- **CSS Animations**: 5+ animations
+- **Mobile Responsive**: Yes ✅
+
+---
+
+## 🎓 Key Concepts (Educational)
+
+### Backend (Python/Flask)
+- **Session Management**: Store game state between requests
+- **RESTful API Design**: Clean endpoint structure
+- **JSON Response Format**: Structured data exchange
+- **Error Handling**: Try-catch and validation
+- **State Persistence**: Session dictionary management
+
+### Frontend (JavaScript)
+- **Fetch API**: Async HTTP requests to backend
+- **DOM Manipulation**: Update UI in real-time
+- **Event Listeners**: Handle user interactions
+- **Promise Chains**: Handle async operations
+- **CSS Classes**: Dynamic styling based on state
+
+### Game Logic
+- **State Machine**: Track game conditions
+- **Win/Loss Detection**: Multi-condition checking
+- **Letter Tracking**: Sets for efficient lookup
+- **Hint System**: Sequential hint delivery
+- **Random Selection**: Random word picking
+
+---
+
+## 🚀 Future Enhancements
+
+- [ ] Difficulty selector before game
+- [ ] Leaderboard with scores
+- [ ] Timer for timed challenges
+- [ ] Sound effects & background music
+- [ ] Multiplayer mode
+- [ ] Keyboard input support
+- [ ] Dark mode theme
+- [ ] Animation customization
+
+---
+
+## 📜 License
+
+This project is part of CodeAlpha Internship Program.
+
+---
+
+## 👤 Author
+
+**Vidushi Goel** | B.Tech ECE | Banasthali Vidyapith
+
+- **GitHub**: https://github.com/goel-codes
+- **LinkedIn**: https://www.linkedin.com/in/vidushi-goel-95894a330/
+- **Email**: vidushigoel1616@gmail.com
+
+---
+
+## 📝 Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0 | June 2026 | Initial web version with hints & celebration pages |
+| 0.5 | June 2026 | Console version (hangman_game.py) |
+
+---
+
+## ✅ Checklist for Submission
+
+- [x] Working Flask server
+- [x] Beautiful responsive UI
+- [x] Smart hint system
+- [x] Win/Loss celebration pages
+- [x] Mobile-friendly design
+- [x] Professional README
+- [x] GitHub repository
+- [x] Demo video ready
+- [ ] LinkedIn post
+- [ ] CodeAlpha submission form
+
+---
+
+**Made with ❤️ for CodeAlpha Internship**
